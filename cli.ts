@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+/* eslint-disable node/shebang */
 /* eslint-disable import/no-unresolved */
 
 import fs from 'node:fs'
