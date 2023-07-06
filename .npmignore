@@ -1,0 +1,17 @@
+.git
+.github
+.nyc_output
+coverage
+node_modules
+test
+
+.eslintignore
+.eslintrc.json
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc.json
+.snyk
+
+metadata.json
+tsconfig.json
