@@ -1,9 +1,9 @@
 {
   "name": "@cityssm/pdf-metadata-recorder",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0-alpha.1",
   "type": "module",
   "description": "A tool to extract PDF metadata into a JSON file.",
-  "bin": "cli.js",
+  "bin": "./cli.js",
   "engines": {
     "node": "^14.13.1 || >=16.0.0"
   },
