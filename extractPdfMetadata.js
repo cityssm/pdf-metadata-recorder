@@ -15,7 +15,7 @@ export async function extractPdfMetadata(inputFolder, configOptions) {
         };
         if (configOptions.outline) {
             metadata.outline = [];
-            const outline = await pdfDocument.getOutline();
+            const outline = (await pdfDocument.getOutline()) ?? [];
             for (const outlineHeading of outline) {
                 metadata.outline.push(outlineHeading.title);
             }
