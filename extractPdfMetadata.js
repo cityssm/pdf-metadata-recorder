@@ -17,7 +17,27 @@ export async function extractPdfMetadata(inputFolder, configOptions) {
             metadata.outline = [];
             const outline = (await pdfDocument.getOutline()) ?? [];
             for (const outlineHeading of outline) {
-                metadata.outline.push(outlineHeading.title);
+                metadata.outline.push(outlineHeading.title.trim());
+            }
+        }
+        const documentMetadata = await pdfDocument.getMetadata();
+        const documentMetadataInfo = documentMetadata.info;
+        if (configOptions.author) {
+            metadata.author = documentMetadataInfo.Author ?? '';
+        }
+        if (configOptions.title) {
+            metadata.title = documentMetadataInfo.Title ?? '';
+        }
+        if (configOptions.fullContent) {
+            metadata.fullContent = '';
+            for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+                const page = await pdfDocument.getPage(pageNumber);
+                if (configOptions.fullContent) {
+                    const textContent = await page.getTextContent();
+                    metadata.fullContent += textContent.items.reduce((soFar, currentText) => {
+                        return soFar + ' ' + currentText.str;
+                    }, '');
+                }
             }
         }
         allMetadata.push(metadata);

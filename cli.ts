@@ -9,6 +9,7 @@ import path from 'node:path'
 import meow from 'meow'
 
 import { extractPdfMetadata } from './extractPdfMetadata.js'
+import type { Config } from './types.js'
 
 const cli = meow(
   `
@@ -46,11 +47,19 @@ console.log(`Input Folder: ${inputFolder}`)
  * Config JSON
  */
 
-const configJsonFile =
-  cli.flags.configJsFile ?? path.join(process.cwd(), 'config.default.json')
+const configJsonFile = cli.flags.configJsFile
 
-const configData = fs.readFileSync(configJsonFile)
-const config = JSON.parse(configData as unknown as string)
+let config: Config = {
+  outline: true,
+  title: true,
+  author: true,
+  fullContent: true
+}
+
+if (configJsonFile !== undefined) {
+  const configData = fs.readFileSync(configJsonFile)
+  config = JSON.parse(configData as unknown as string)
+}
 
 console.log(`Configuration: ${JSON.stringify(config)}`)
 

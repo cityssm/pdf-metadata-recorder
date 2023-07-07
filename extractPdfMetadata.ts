@@ -28,15 +28,60 @@ export async function extractPdfMetadata(
       fileName
     }
 
+    // Outline
+
     if (configOptions.outline) {
       metadata.outline = []
 
       const outline = (await pdfDocument.getOutline()) ?? []
 
       for (const outlineHeading of outline) {
-        metadata.outline.push(outlineHeading.title)
+        metadata.outline.push(outlineHeading.title.trim())
       }
     }
+
+    // Metadata object
+
+    const documentMetadata = await pdfDocument.getMetadata()
+    const documentMetadataInfo = documentMetadata.info as {
+      Author?: string
+      Title?: string
+    }
+
+    if (configOptions.author) {
+      metadata.author = documentMetadataInfo.Author ?? ''
+    }
+
+    if (configOptions.title) {
+      metadata.title = documentMetadataInfo.Title ?? ''
+    }
+
+    // Headings
+
+    if (configOptions.fullContent) {
+      metadata.fullContent = ''
+
+      for (
+        let pageNumber = 1;
+        pageNumber <= pdfDocument.numPages;
+        pageNumber += 1
+      ) {
+        const page = await pdfDocument.getPage(pageNumber)
+
+        if (configOptions.fullContent) {
+          const textContent = await page.getTextContent()
+          metadata.fullContent += textContent.items.reduce(
+            (soFar, currentText) => {
+              // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+              return soFar + ' ' + currentText.str
+            },
+            ''
+          )
+        }
+      }
+    }
+
+    // Push output
 
     allMetadata.push(metadata)
   }

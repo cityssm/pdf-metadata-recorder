@@ -25,9 +25,17 @@ const cli = meow(`
 });
 const inputFolder = cli.input[0] ?? process.cwd();
 console.log(`Input Folder: ${inputFolder}`);
-const configJsonFile = cli.flags.configJsFile ?? path.join(process.cwd(), 'config.default.json');
-const configData = fs.readFileSync(configJsonFile);
-const config = JSON.parse(configData);
+const configJsonFile = cli.flags.configJsFile;
+let config = {
+    outline: true,
+    title: true,
+    author: true,
+    fullContent: true
+};
+if (configJsonFile !== undefined) {
+    const configData = fs.readFileSync(configJsonFile);
+    config = JSON.parse(configData);
+}
 console.log(`Configuration: ${JSON.stringify(config)}`);
 const outputJsonFile = cli.flags.outputJsonFile ?? path.join(process.cwd(), 'metadata.json');
 console.log(`Output File: ${outputJsonFile}`);
